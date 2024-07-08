@@ -31,7 +31,7 @@ pip install django_advanced_password_validators
 ### Development installation
 
 ```bash
-git clone https://github.com/ezrajrice/django-advanced_password_validation.git
+git clone https://github.com/shanathvemula/django_advanced_password_validators
 cd django-advanced_password_validation
 pip install --editable .
 ```
