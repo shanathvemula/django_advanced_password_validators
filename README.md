@@ -50,6 +50,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django_advanced_password_validators.validators.password_validators.PasswordValidators',
         'OPTIONS': {
+            "min_length": 8,
+            "max_length": 128,
             "min_length_digit": 1,
             "min_length_alpha": 1,
             "min_length_special": 1,

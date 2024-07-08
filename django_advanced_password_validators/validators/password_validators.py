@@ -15,6 +15,7 @@ from django.contrib.auth.password_validation import (
 class PasswordValidators:
     def __init__(
             self,
+            max_length=128,
             min_length=8,
             min_length_digit=0,
             min_length_alpha=0,
@@ -22,8 +23,9 @@ class PasswordValidators:
             min_length_lower=0,
             min_length_upper=0,
             special_characters="~!@#$%^&*()_+{}\":;'[]",
-            user_attributes=None,
+            user_attributes=None
     ):
+        self.max_length = max_length
         self.min_length = min_length
         self.min_length_digit = min_length_digit
         self.min_length_alpha = min_length_alpha
@@ -63,6 +65,17 @@ class PasswordValidators:
             common_password_validator.validate(password.lower(), user)
         except ValidationError as e:
             validation_errors.extend(e.error_list)
+
+        if length > self.max_length:
+            validation_errors.append(ValidationError(
+                ngettext(
+                    'Password is too long accepts upto %(max_length)d characters.',
+                    'Password is too long accepts upto %(max_length)d characters.',
+                    self.max_length
+                ),
+                params={'max_length': self.max_length},
+                code='password_too_long',
+            ))
 
         if length < self.min_length:
             validation_errors.append(ValidationError(
@@ -141,6 +154,14 @@ class PasswordValidators:
 
     def get_help_text(self):
         validation_req = []
+        if self.max_length:
+            validation_req.append(
+                ngettext(
+                    "%(max_length)s characters",
+                    "%(max_length)s characters",
+                    self.max_length
+                ) % {'max_length': self.max_length}
+            )
         if self.min_length:
             validation_req.append(
                 ngettext(
